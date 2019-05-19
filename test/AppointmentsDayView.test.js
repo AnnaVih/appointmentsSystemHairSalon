@@ -1,20 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
+import 'whatwg-fetch';
+import { fetchResponseOk, fetchResponseError, requestBodyOf } from './spyHelpers';
+import { createContainer } from './domManipulators';
 import {
   Appointment,
   AppointmentsDayView
 } from '../src/AppointmentsDayView';
 
 describe('Appointment', () => {
-  let container;
-  let customer;
+  let render, container, customer, form, field, labelFor, elements, timeSlotTable, submit, change;
 
+  
   beforeEach(() => {
-    container = document.createElement('div');
-  });
+    ({
+      render,   
+      container, 
+      form, 
+      field, 
+      timeSlotTable, 
+      elements, 
+      labelFor, 
+      submit, 
+      change 
+    } = createContainer())
 
-  const render = component => ReactDOM.render(component, container);
+    jest
+    .spyOn(window, 'fetch')
+    .mockReturnValue(fetchResponseOk({}));
+  })
+
+  afterEach(() => {
+    window.fetch.mockRestore();
+  });
 
   it('renders the customer first name', () => {
     customer = { firstName: 'Ashley' };  

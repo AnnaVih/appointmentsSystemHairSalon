@@ -133,8 +133,23 @@ export const AppointmentForm = ({
     [target.name]: target.value
   }));
 
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const result = await window.fetch('/appointment', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(selectedService)
+    });
+    if (result.ok) {
+      onSubmit()
+    } else {
+      setError(true);
+    }
+  };
+
   return (
-    <form id="appointment" onSubmit={() => onSubmit(selectedService)}>
+    <form id="appointment" onSubmit={handleSubmit}>
       <label htmlFor="service">Services</label>
       <select
         name="service"
